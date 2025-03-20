@@ -3,6 +3,9 @@ import {Stack} from '@mui/material';
 import {Global, css} from '@emotion/react'
 import {Progress} from '../progress';
 import {TodoList} from '../todo-list';
+import {Header} from '../header';
+import {AppState} from './app-state';
+import {ErrorBoundary} from './error-boundary';
 
 export const App = () => {
   // TODO: Establish connection to the server
@@ -19,7 +22,12 @@ export const App = () => {
       </Stack>
     );
   } else {
-    content = <TodoList/>;
+    content = (
+      <AppState>
+        <Header/>
+        <TodoList/>
+      </AppState>
+    );
   }
   return (
     <>
@@ -32,7 +40,9 @@ export const App = () => {
             }
         `}
       />
-      {content}
+      <ErrorBoundary>
+        {content}
+      </ErrorBoundary>
     </>
   );
 };

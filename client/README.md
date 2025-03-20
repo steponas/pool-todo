@@ -7,7 +7,8 @@ This is the Electron (client) App for the TODO Challenge.
 ```
 src/
   main/ -- electron related code
-  rendered/ -- the React UI application
+  renderer/ -- the React UI application
+  services/ -- networking services
 ```
 
 ## Running in dev mode
