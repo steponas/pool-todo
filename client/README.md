@@ -1,6 +1,4 @@
-# TODO App for Poolside by Steponas Dauginis
-
-This is the Electron (client) App for the TODO Challenge.
+## This is the Electron (client) App for the TODO Challenge.
 
 ## Folder Structure
 
@@ -8,8 +6,16 @@ This is the Electron (client) App for the TODO Challenge.
 src/
   main/ -- electron related code
   renderer/ -- the React UI application
-  services/ -- networking services
 ```
 
 ## Running in dev mode
-`npm run start`
+```
+cd $THIS_FOLDER
+npm install
+npm run start
+```
+
+## Running the tests
+```
+npm run test
+```

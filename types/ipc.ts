@@ -5,6 +5,7 @@ import {TodoList} from './todo-list';
 export enum IPCRendererMessageType {
   GET_SETTINGS = 'GET_SETTINGS',
   STORE_USER = 'STORE_USER',
+  STORE_LIST = 'STORE_LIST',
 }
 
 export interface IPCGetSettingsResponse {
@@ -17,3 +18,5 @@ export interface IPCGetSettingsResponse {
 export interface IPCStoreUserResponse {
   error?: string;
 }
+
+export type IPCStoreTodoListResponse = IPCStoreUserResponse;

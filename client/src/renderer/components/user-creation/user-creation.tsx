@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const UserCreation: React.FC<Props> = ({onCreated}) => {
-  const {mutate: storeUser, error: storeUserError, isPending, data: storeUserResult} = useStoreUserDataMutation();
+  const {mutate: storeUser, error: storeUserError, isPending} = useStoreUserDataMutation();
   const [name, setName] = React.useState('');
   const [inputError, setInputError] = React.useState(false);
   const save = () => {

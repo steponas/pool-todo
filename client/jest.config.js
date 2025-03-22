@@ -1,8 +1,8 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 module.exports = {
-  testEnvironment: 'jsdom',
+  testEnvironment: './FixJSDOMEnvironment.ts',
   transform: {
-    '^.+\.tsx?$': ['ts-jest',{}],
+    '^.+.tsx?$': ['ts-jest',{}],
   },
   preset: 'ts-jest',
   setupFiles: [

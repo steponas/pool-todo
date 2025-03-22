@@ -1,4 +1,4 @@
-import {clearCachedSettings, loadSettings, writeSettings} from './index';
+import {clearCachedSettings, loadSettings, updateSettings, writeSettings} from './index';
 import fs from 'node:fs/promises'
 import {LoadSettingsError} from '../../../../../types';
 
@@ -120,5 +120,20 @@ describe('Settings Service', () => {
 
     const result = await loadSettings('/test/path');
     expect(result).toEqual({settings});
+  });
+
+  it('should update the settings', async () => {
+    mockFs.readFile.mockImplementation(() => Promise.resolve('{"user": {"name": "test"}, "list": {"id": "123", "name": "List #1"}, "token": "test123"}'));
+
+    const result = await updateSettings('/test/path', (settings) => {
+      settings.user.name = 'updated';
+      settings.list.name = 'Updated List';
+    });
+    expect(result).toBe(null);
+
+    // Update values should be returned
+    const updated = await loadSettings('/test/path');
+    expect(updated.settings.user.name).toBe('updated');
+    expect(updated.settings.list.name).toBe('Updated List');
   });
 });

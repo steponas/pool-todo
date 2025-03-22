@@ -22,7 +22,9 @@ export const clearCachedSettings = () => {
 const loadSettingsFromFs = async (path: string) => {
   let data: string;
   try {
+    Log.debug('Loading settings file', {path});
     data = await fs.readFile(path, 'utf-8');
+    Log.debug('Settings data loaded as ', {data});
   } catch (err) {
     Log.warn('Failed to load settings file', err);
     return {
@@ -74,4 +76,13 @@ export const writeSettings = async (path: string, settings: Settings): Promise<E
     settings,
   };
   return null;
+}
+
+// Helper function to update settings values
+export const updateSettings = async (path: string, updater: (settings: Settings) => void) => {
+  const {settings} = await loadSettings(path);
+  // Create a deep copy to prevent unexpected modifications
+  const newSettings = structuredClone(settings);
+  updater(newSettings);
+  return await writeSettings(path, newSettings);
 }
