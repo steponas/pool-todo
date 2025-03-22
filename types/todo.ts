@@ -16,3 +16,9 @@ export interface Todo {
   // Apart from being a useful field to have, updatedAt is used for versioning.
   updatedAt: Date;
 }
+
+// An update on a Todo item.
+export interface TodoUpdate {
+  status: TodoStatus;
+  title: string;
+}

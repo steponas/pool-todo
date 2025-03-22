@@ -1,9 +1,10 @@
 import React from 'react';
 import {Stack} from '@mui/material';
-import {Todo, TodoStatus} from '../../../../../types';
+import {Todo, TodoStatus, TodoUpdate} from '../../../../../types';
 import {TodoItem, NewTodoItem} from '../todo-item';
 import {Empty} from './empty';
 import {useAppContext} from '../../context';
+import {TodoEdit} from '../todo-edit';
 
 const mockData: Todo[] = [
   {
@@ -35,7 +36,7 @@ const mockData: Todo[] = [
       id: '131',
       name: 'James Smith',
     },
-    title: 'Third todo. Nice long list. Some powerful things. Wowo.',
+    title: 'Third todo. Nice long list. Some powerful things\n\nWowo.',
     updatedAt: new Date(),
     status: TodoStatus.DONE,
   },
@@ -44,14 +45,34 @@ const mockData: Todo[] = [
 export const TodoList = () => {
   const ctx = useAppContext();
 
-  const items = mockData.map((todo) => (
-    <TodoItem
-      todo={todo}
-      key={todo.id}
-      inEdit={todo.id === ctx.editedId}
-      onStartEdit={() => ctx.onEdit(todo.id)}
-    />
-  ));
+  const items = mockData.map((todo) => {
+    if (todo.id === ctx.editedId) {
+      // For edit, show the edit component
+      return (
+        <TodoEdit
+          key={todo.id}
+          initialTitle={todo.title}
+          initialStatus={todo.status}
+          onSave={(update: TodoUpdate) => {
+            console.log('Updating todo:', update);
+            ctx.onCancelEdit();
+          }}
+          onDelete={() => {
+            console.log('Deleting todo:', todo.id);
+            ctx.onCancelEdit();
+          }}
+          onCancel={ctx.onCancelEdit}
+        />
+      )
+    }
+    return (
+      <TodoItem
+        key={todo.id}
+        todo={todo}
+        onStartEdit={() => ctx.onEdit(todo.id)}
+      />
+    )
+  });
   if (ctx.isNewTodo) {
     items.unshift(<NewTodoItem key="new-todo"/>);
   }

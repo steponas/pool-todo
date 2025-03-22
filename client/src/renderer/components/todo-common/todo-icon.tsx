@@ -7,6 +7,7 @@ import {TodoStatus} from '../../../../../types';
 
 interface Props {
   status: TodoStatus;
+  withColor?: boolean;
 }
 
 const getIconColor = (status: TodoStatus) => {
@@ -22,8 +23,8 @@ const getIconColor = (status: TodoStatus) => {
   }
 }
 
-export const TodoIcon: React.FC<Props> = ({status}) => {
-  const sx = {color: getIconColor(status)};
+export const TodoIcon: React.FC<Props> = ({status, withColor = true}) => {
+  const sx = withColor ? {color: getIconColor(status)} : undefined;
   switch (status) {
     case TodoStatus.TODO:
       return <HourglassEmptyOutlinedIcon sx={sx}/>;
