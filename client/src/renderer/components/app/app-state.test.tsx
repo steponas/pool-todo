@@ -15,7 +15,7 @@ describe('AppState Component', () => {
     };
 
     render(
-      <AppState>
+      <AppState list={null} user={null}>
         <TestConsumer />
       </AppState>
     );

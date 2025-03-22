@@ -1,9 +1,10 @@
 import React from 'react';
-import {User} from '../../../../types';
+import {TodoList, User} from '../../../../types';
 
 export interface AppContextT {
   // User data
   currentUser: User;
+  list: TodoList;
   // Newly added TODO data
   isNewTodo: boolean;
   onNewTodo: () => void;
