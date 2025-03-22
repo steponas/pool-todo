@@ -62,12 +62,16 @@ export const loadSettings = async (path: string) => {
   return cachedResult;
 };
 
-export const writeSettings = async (path: string, settings: Settings) => {
+export const writeSettings = async (path: string, settings: Settings): Promise<Error | null> => {
   try {
     await fs.writeFile(path, JSON.stringify(settings, null, 2), 'utf-8');
   } catch (err) {
     Log.error('Failed to write settings file', err);
-    return false;
+    return err;
   }
-  return true;
+
+  cachedResult = {
+    settings,
+  };
+  return null;
 }

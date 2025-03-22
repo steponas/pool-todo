@@ -2,6 +2,7 @@ import React from 'react';
 import {Stack} from '@mui/material';
 import {Global, css} from '@emotion/react'
 import Log from 'electron-log/renderer';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {Progress} from '../progress';
 import {Header} from '../header';
 import {AppState} from './app-state';
@@ -10,6 +11,8 @@ import {User, TodoList as TodoListT} from '../../../../../types';
 import {UserCreation} from '../user-creation';
 import {ListSelection} from '../list-selection';
 import {TodoList} from '../todo-list';
+
+const queryClient = new QueryClient();
 
 export const App = () => {
   const [user, setUser] = React.useState<User | null | undefined>(undefined);
@@ -25,7 +28,7 @@ export const App = () => {
         setToken(s.token ?? null);
       })
       .catch(err => {
-        Log.error(err);
+        Log.error('Failed to get app main settings', err);
         setUser(null);
       });
   }, [])
@@ -39,7 +42,6 @@ export const App = () => {
   // TODO: Token based authentication
   // TODO: Fetch TODOs from the server
   const hasData = true;
-  // const error = null;
 
   console.log('User:', user);
 
@@ -83,7 +85,9 @@ export const App = () => {
         `}
       />
       <ErrorBoundary>
-        {content}
+        <QueryClientProvider client={queryClient}>
+          {content}
+        </QueryClientProvider>
       </ErrorBoundary>
     </>
   );

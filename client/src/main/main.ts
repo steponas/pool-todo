@@ -20,7 +20,8 @@ const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
-    resizable: false,
+    // Allow resizing in development, but not in production
+    resizable: !app.isPackaged,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
