@@ -36,7 +36,7 @@ export const TodoEdit: React.FC<Props> = ({initialTitle, initialStatus, onCancel
         onChange={(e) => setTitle(e.target.value)}
         sx={{width: '100%', mb: 2}}
       />
-      <TodoStatusEdit status={status} onChange={setStatus} sx={{mb: 2}}/>
+      {onDelete && <TodoStatusEdit status={status} onChange={setStatus} sx={{mb: 2}}/>}
       <Stack direction="row" justifyContent="space-between">
         <Button variant="contained" color="primary" onClick={save}>Save</Button>
         <Stack direction="row" justifyContent="space-between" spacing={2}>
