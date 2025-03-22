@@ -32,7 +32,7 @@ export const AppState: React.FC<Props> = ({children, user, list}) => {
         setEditedId(id);
       }
     };
-  }, [isNewTodo, editedId]);
+  }, [isNewTodo, editedId, list, user]);
   return (
     <AppContext value={context}>
       {children}

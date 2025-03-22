@@ -1,4 +1,4 @@
-import {ipcMain as ipcMainImport} from 'electron/main';
+import {ipcMain as ipcMainImport} from 'electron';
 import Log from 'electron-log/main';
 import {IPCRendererMessageType} from '../../../../types';
 import {readSettings} from './settings';
