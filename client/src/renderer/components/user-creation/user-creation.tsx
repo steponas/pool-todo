@@ -4,33 +4,37 @@ import {User} from '../../../../../types';
 import {CenteredLayout} from '../common';
 import {useStoreUserDataMutation} from '../../ipc';
 import {QueryError} from '../common/query-error';
+import {useCreateUserWSMutation} from '../../ws';
 
 interface Props {
   onCreated: (u: User, token: string) => void;
 }
 
 export const UserCreation: React.FC<Props> = ({onCreated}) => {
-  const {mutate: storeUser, error: storeUserError, isPending} = useStoreUserDataMutation();
+  const {mutateAsync: createUser, error: createUserError, isPending: isCreating} = useCreateUserWSMutation();
+  const {mutateAsync: storeUser, error: storeUserError, isPending: isStoring} = useStoreUserDataMutation();
   const [name, setName] = React.useState('');
   const [inputError, setInputError] = React.useState(false);
-  const save = () => {
+  const save = async () => {
     if (!name) {
       setInputError(true);
       return;
     }
-    // TODO: save user in backend, get response here
-    const tempUser = {name, id: 'mock123'};
-    const tempToken = 'mock-token';
-    // Store user in application settings
-    storeUser({user: tempUser, token: tempToken}, {
-      onSuccess: () => {
-        onCreated(tempUser, tempToken);
-      }
-    });
+    try {
+      const data = await createUser({name});
+      // Store user in application settings
+      await storeUser(data);
+      onCreated(data.user, data.token);
+    } catch(e) {
+      // Not handling, the error is already displayed in the UI
+    }
   };
+
+  const isLoading = isCreating || isStoring;
 
   return (
     <CenteredLayout>
+      <QueryError title="Failed to create user" error={createUserError}/>
       <QueryError title="Failed to store user data locally" error={storeUserError}/>
       <Typography variant="h2" fontSize="x-large">Welcome! 👋 Please enter your name:</Typography>
       <TextField
@@ -48,9 +52,9 @@ export const UserCreation: React.FC<Props> = ({onCreated}) => {
           }
         }}
         helperText={inputError ? 'Please enter your name.' : undefined}
-        disabled={isPending}
+        disabled={isLoading}
       />
-      <Button variant="contained" color="primary" onClick={save}>
+      <Button variant="contained" color="primary" onClick={save} disabled={isLoading}>
         Next &rarr;
       </Button>
     </CenteredLayout>

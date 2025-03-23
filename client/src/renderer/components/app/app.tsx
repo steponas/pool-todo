@@ -11,6 +11,7 @@ import {User, TodoList as TodoListT} from '../../../../../types';
 import {UserCreation} from '../user-creation';
 import {ListSelection} from '../list-selection';
 import {TodoList} from '../todo-list';
+import {setupWSConnection} from '../../ws';
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ export const App = () => {
 
   // Load the user from settings, if any.
   React.useEffect(() => {
+    // Load app settings
     window.todoApi.getSettings()
       .then(s => {
         setUser(s.user ?? null);
@@ -31,6 +33,9 @@ export const App = () => {
         Log.error('Failed to get app main settings', err);
         setUser(null);
       });
+
+    // Connect to WebSocket server
+    setupWSConnection();
   }, [])
 
   if (user === undefined) {
