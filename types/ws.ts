@@ -8,6 +8,7 @@ export enum WSClientRequestTypes {
   SELECT_LIST = 'SELECT_LIST',
   CREATE_LIST = 'CREATE_LIST',
   GET_LIST_TODOS = 'GET_LIST_TODOS',
+  CREATE_TODO = 'CREATE_TODO',
 }
 
 export interface WSErrorResponse {
@@ -43,4 +44,11 @@ export interface WSSelectTodoListResponse {}
 
 export interface WSGetListTodosResponse {
   todos: Todo[];
+}
+
+export interface WSCreateTodoItemRequest {
+  title: string;
+}
+export interface WSCreateTodoItemResponse {
+  todo: Todo;
 }

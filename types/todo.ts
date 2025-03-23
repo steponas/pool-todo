@@ -10,11 +10,11 @@ export enum TodoStatus {
 export interface Todo {
   id: string;
   status: TodoStatus;
-  createdAt: Date;
+  createdAt: string;
   createdBy: User;
   title: string;
   // Apart from being a useful field to have, updatedAt is used for versioning.
-  updatedAt: Date;
+  updatedAt: string;
 }
 
 // An update on a Todo item.

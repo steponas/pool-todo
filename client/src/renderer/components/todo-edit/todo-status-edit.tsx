@@ -7,6 +7,7 @@ import {canMoveToStatus} from '../../../../../common-utils/src/todo';
 interface Props {
   status: TodoStatus;
   onChange: (s: TodoStatus) => void;
+  disabled?: boolean;
   sx?: SxProps;
 }
 
@@ -16,7 +17,7 @@ const todoButtons = [
   {status: TodoStatus.DONE, label: 'Done'},
 ];
 
-export const TodoStatusEdit: React.FC<Props> = ({status, onChange, sx}) => {
+export const TodoStatusEdit: React.FC<Props> = ({status, onChange, sx, disabled}) => {
   const initialStatus = React.useMemo(
     () => status,
     // No need to update, we want the status constant for the component lifecycle.
@@ -30,6 +31,7 @@ export const TodoStatusEdit: React.FC<Props> = ({status, onChange, sx}) => {
       onChange={(_, v) => v && onChange(v)}
       size="small"
       sx={sx}
+      disabled={disabled}
     >
       {todoButtons.map(({status: s, label}) => (
         <ToggleButton key={s} value={s} disabled={!canMoveToStatus(initialStatus, s)}>

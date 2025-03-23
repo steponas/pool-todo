@@ -1,9 +1,7 @@
 import React from 'react';
-import {Stack} from '@mui/material';
 import {Global, css} from '@emotion/react'
 import Log from 'electron-log/renderer';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {Progress} from '../progress';
 import {Header} from '../header';
 import {AppState} from './app-state';
 import {ErrorBoundary} from './error-boundary';
@@ -14,7 +12,6 @@ import {TodoList} from '../todo-list';
 import {setupWSConnection} from '../../ws';
 import {Auth} from './auth';
 import {useWSDisconnect} from '../../ws/disconnect';
-import {useTodoStore} from './todo-store';
 
 // Instantiate the WS Client early, before React starts rendering.
 setupWSConnection();
@@ -52,9 +49,6 @@ export const App = () => {
     // User not yet loaded from settings. Wait to render the UI.
     return null;
   }
-
-  // TODO: Fetch TODOs from the server
-  const hasData = true;
 
   let content: React.ReactNode;
   if (user === null) {
@@ -98,7 +92,7 @@ export const App = () => {
     <>
       <Global
         styles={css`
-            document, html, body {
+            html, body {
                 margin: 0;
                 padding: 0;
                 height: 100%;

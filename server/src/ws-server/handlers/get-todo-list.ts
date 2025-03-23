@@ -1,5 +1,5 @@
 import {Server, Socket} from 'socket.io';
-import {TodoListModel} from '../../model';
+import {TodoItemModel} from '../../model';
 import {logger} from '../../log';
 import {
   WSErrorResponse,
@@ -14,10 +14,12 @@ export const getTodoList = async (io: Server, client: Socket, data: void, callba
   try {
     const id = client.data.todoList.id;
     if (!id) {
-      throw new Error('List object does not contain id');
+      throw new Error('Todo list object does not contain id');
     }
+    const x = await TodoItemModel.getAllForList(id)
+    console.log({x});
     callback({
-      todos: await TodoListModel.getAllForList(id),
+      todos: x,
     })
   } catch (err) {
     logger.error('Failed to fetch TODOs for list: ', err);

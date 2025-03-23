@@ -31,10 +31,10 @@ CREATE TYPE "todo_item_status" AS ENUM ('todo', 'ongoing', 'done');
 CREATE TABLE todo_items (
     id UUID NOT NULL DEFAULT gen_random_uuid(),
     todo_list_id INT NOT NULL,
-    name TEXT NOT NULL,
+    title TEXT NOT NULL,
     status todo_item_status NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     created_by UUID NOT NULL,
     primary key (id),
     foreign key (todo_list_id) references todo_lists(id),
