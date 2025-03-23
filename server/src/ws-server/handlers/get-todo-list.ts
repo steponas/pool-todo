@@ -16,10 +16,8 @@ export const getTodoList = async (io: Server, client: Socket, data: void, callba
     if (!id) {
       throw new Error('Todo list object does not contain id');
     }
-    const x = await TodoItemModel.getAllForList(id)
-    console.log({x});
     callback({
-      todos: x,
+      todos: await TodoItemModel.getAllForList(id),
     })
   } catch (err) {
     logger.error('Failed to fetch TODOs for list: ', err);

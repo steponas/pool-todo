@@ -5,6 +5,7 @@ import {TodoStatus, TodoUpdate} from '../../../../../types';
 import {TodoWrapper} from '../todo-common';
 import {TodoStatusEdit} from './todo-status-edit';
 import { QueryError } from '../common/query-error';
+import {useUpdateTodoMutation} from '../../ws/update-todo-item';
 
 interface Props {
   initialTitle: string;

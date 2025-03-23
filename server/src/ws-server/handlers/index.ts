@@ -6,6 +6,7 @@ import {createList} from './create-list';
 import {selectTodoListForUser} from './select-list';
 import {getTodoList} from './get-todo-list';
 import {createTodo} from './create-todo';
+import {updateTodo} from './update-todo';
 
 const nonAuthHandlers = [
   {type: WSClientRequestTypes.CREATE_USER, handler: createUser},
@@ -17,6 +18,7 @@ const authenticatedHandlers = [
   {type: WSClientRequestTypes.SELECT_LIST, handler: selectTodoListForUser},
   {type: WSClientRequestTypes.GET_LIST_TODOS, handler: getTodoList},
   {type: WSClientRequestTypes.CREATE_TODO, handler: createTodo},
+  {type: WSClientRequestTypes.UPDATE_TODO, handler: updateTodo},
 ];
 
 export const setupHandlers = (io: Server, client: Socket) => {

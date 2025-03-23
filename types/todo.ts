@@ -11,8 +11,9 @@ export interface Todo {
   id: string;
   status: TodoStatus;
   createdAt: string;
-  createdBy: User;
+  createdBy: string;
   title: string;
+  todoListId: number;
   // Apart from being a useful field to have, updatedAt is used for versioning.
   updatedAt: string;
 }

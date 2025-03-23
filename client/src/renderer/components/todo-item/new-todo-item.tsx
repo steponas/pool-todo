@@ -9,7 +9,11 @@ export const NewTodoItem = () => {
   const {mutate, isPending, error} = useCreateTodoItem();
 
   const createTodo = (todo: TodoUpdate) => {
-    mutate({title: todo.title});
+    mutate({title: todo.title}, {
+      onSuccess: () => {
+        ctx.onCancelEdit();
+      },
+    });
   };
 
   return (

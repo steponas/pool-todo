@@ -1,6 +1,6 @@
 import {User} from './user';
 import {TodoList} from './todo-list';
-import {Todo} from './todo';
+import {Todo, TodoStatus} from './todo';
 
 export enum WSClientRequestTypes {
   CREATE_USER = 'CREATE_USER',
@@ -9,6 +9,7 @@ export enum WSClientRequestTypes {
   CREATE_LIST = 'CREATE_LIST',
   GET_LIST_TODOS = 'GET_LIST_TODOS',
   CREATE_TODO = 'CREATE_TODO',
+  UPDATE_TODO = 'UPDATE_TODO',
 }
 
 export interface WSErrorResponse {
@@ -51,4 +52,19 @@ export interface WSCreateTodoItemRequest {
 }
 export interface WSCreateTodoItemResponse {
   todo: Todo;
+}
+
+export interface WSUpdateTodoItemRequest {
+  id: string;
+  title: string;
+  status: TodoStatus;
+  lastUpdateTime: string;
+}
+export enum TodoUpdateStatus {
+  OK = 'ok',
+  CONFLICT = 'conflict',
+  INCORRECT_STATUS = 'incorrect_status',
+}
+export interface WSUpdateTodoItemResponse {
+  status: TodoUpdateStatus;
 }

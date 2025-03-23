@@ -8,10 +8,12 @@ import {TodoEdit} from '../todo-edit';
 import {useTodoStore} from '../app/todo-store';
 import {Progress} from '../progress';
 import {QueryError} from '../common/query-error';
+import {useUpdateTodoMutation} from '../../ws/update-todo-item';
 
 export const TodoList = () => {
   const ctx = useAppContext();
   const {todoList, isPending, error} = useTodoStore();
+  const {mutate: update, isPending: isUpdating, error: updateError} = useUpdateTodoMutation();
 
   if (isPending) {
     return (
@@ -36,15 +38,25 @@ export const TodoList = () => {
           key={todo.id}
           initialTitle={todo.title}
           initialStatus={todo.status}
-          onSave={(update: TodoUpdate) => {
-            console.log('Updating todo:', update);
-            ctx.onCancelEdit();
+          onSave={(todoUpdate: TodoUpdate) => {
+            update({
+              id: todo.id,
+              status: todoUpdate.status,
+              title: todoUpdate.title,
+              lastUpdateTime: todo.updatedAt,
+            }, {
+              onSuccess: () => {
+                ctx.onCancelEdit();
+              },
+            })
           }}
           onDelete={() => {
             console.log('Deleting todo:', todo.id);
             ctx.onCancelEdit();
           }}
           onCancel={ctx.onCancelEdit}
+          error={updateError}
+          isLoading={isUpdating}
         />
       )
     }
