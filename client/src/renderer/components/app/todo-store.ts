@@ -2,9 +2,6 @@ import React from 'react';
 import {Todo} from '../../../../../types';
 import {useGetAllTodos} from '../../ws/get-list-todos';
 
-interface Args {
-  code: string;
-}
 interface Result {
   todoList: Todo[] | null;
   error: Error | null;
@@ -12,7 +9,7 @@ interface Result {
 }
 
 // This hook handles everything related to a TODO fetching.
-export const useTodoStore = ({code}: Args): Result => {
+export const useTodoStore = (): Result => {
   const [list, setList] = React.useState<Todo[]>([]);
   const [error, setError] = React.useState<Error | null>(null);
   const [isPending, setIsPending] = React.useState(false);
@@ -21,7 +18,7 @@ export const useTodoStore = ({code}: Args): Result => {
     data: initialTodos,
     isPending: initialTodosFetching,
     error: initialTodosError
-  } = useGetAllTodos(code);
+  } = useGetAllTodos();
 
   // Fetch initial TODOs.
   React.useEffect(() => {

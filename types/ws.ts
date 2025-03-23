@@ -7,7 +7,6 @@ export enum WSClientRequestTypes {
   TOKEN_AUTH = 'TOKEN_AUTH',
   SELECT_LIST = 'SELECT_LIST',
   CREATE_LIST = 'CREATE_LIST',
-  VALIDATE_LIST_EXISTS = 'VALIDATE_LIST_EXISTS',
   GET_LIST_TODOS = 'GET_LIST_TODOS',
 }
 
@@ -26,6 +25,7 @@ export interface WSCreateUserResponse {
 
 export interface WSAuthenticateRequest {
   token: string;
+  listCode?: string | null;
 }
 
 export interface WSAuthenticateResponse {
@@ -36,17 +36,10 @@ export interface WSListCreatedResponse {
   list: TodoList;
 }
 
-export interface WSTodoListExistsRequest {
+export interface WSSelectTodoListRequest {
   code: string;
 }
-
-export interface WSTodoListExistsResponse {
-  exists: boolean;
-}
-
-export interface WSGetListTodosRequest {
-  code: string;
-}
+export interface WSSelectTodoListResponse {}
 
 export interface WSGetListTodosResponse {
   todos: Todo[];

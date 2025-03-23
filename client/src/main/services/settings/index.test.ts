@@ -78,7 +78,7 @@ describe('Settings Service', () => {
   it('should write settings to file', async () => {
     const settings = {
       user: {id: '321', name: 'test'},
-      list: {code: 'List #1'},
+      list: {id: 0, code: 'List #1'},
       token: 'test123',
     };
     const res = await writeSettings('/test/path', settings);
@@ -93,7 +93,7 @@ describe('Settings Service', () => {
     mockFs.writeFile.mockRejectedValue(new Error('Failed to write file'));
     const settings = {
       user: {id: '321', name: 'test'},
-      list: {code: 'List #1'},
+      list: {id: 0, code: 'List #1'},
       token: 'token321',
     };
 
@@ -113,7 +113,7 @@ describe('Settings Service', () => {
 
     const settings = {
       user: {id: '321', name: 'test'},
-      list: {code: 'List #1'},
+      list: {id: 0, code: 'List #1'},
       token: 'test123',
     };
     await writeSettings('/test/path', settings);

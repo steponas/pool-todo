@@ -71,6 +71,7 @@ export const App = () => {
     content = (
       <Auth
         token={token}
+        listCode={list?.code ?? null}
         onAuthenticated={() => setAuthenticated(true)}
         onReset={() => {
           setUser(null);

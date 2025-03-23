@@ -23,6 +23,7 @@ describe('createTodoList', () => {
     expect(tx.insert).toHaveBeenCalledWith({
       created_by: 'user-015',
       code: 'list-16',
+      id: 16,
     });
     expect(tx.into).toHaveBeenCalledWith('todo_lists');
     expect(tx.raw).toHaveBeenCalledWith('LOCK TABLE todo_lists IN EXCLUSIVE MODE');

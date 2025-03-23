@@ -1,23 +1,20 @@
 import {Server, Socket} from 'socket.io';
-import {z} from 'zod';
 import {TodoListModel} from '../../model';
 import {logger} from '../../log';
 import {
   WSErrorResponse,
-  WSGetListTodosRequest,
   WSGetListTodosResponse,
 } from '../../../../types';
 
-const reqSchema = z.object({
-  code: z.string().min(1),
-});
-
-export const getTodoList = async (io: Server, client: Socket, data: WSGetListTodosRequest, callback: (r: WSGetListTodosResponse | WSErrorResponse) => unknown) => {
+export const getTodoList = async (io: Server, client: Socket, data: void, callback: (r: WSGetListTodosResponse | WSErrorResponse) => unknown) => {
+  if (!client.data.todoList) {
+    logger.warn('Querying for TODOs without selecting a list');
+    return callback({error: 'No list selected'});
+  }
   try {
-    const {code} = reqSchema.parse(data);
-    const id = await TodoListModel.getIdByCode(code);
+    const id = client.data.todoList.id;
     if (!id) {
-      throw new Error(`List not found for code: ${code}`);
+      throw new Error('List object does not contain id');
     }
     callback({
       todos: await TodoListModel.getAllForList(id),

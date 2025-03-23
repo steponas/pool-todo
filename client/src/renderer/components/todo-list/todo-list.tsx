@@ -11,9 +11,7 @@ import {QueryError} from '../common/query-error';
 
 export const TodoList = () => {
   const ctx = useAppContext();
-  const {todoList, isPending, error} = useTodoStore({
-    code: ctx.list.code,
-  });
+  const {todoList, isPending, error} = useTodoStore();
 
   if (isPending) {
     return (

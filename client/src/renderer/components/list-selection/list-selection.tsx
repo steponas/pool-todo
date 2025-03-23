@@ -5,7 +5,7 @@ import {CenteredLayout} from '../common';
 import {useStoreTodoListMutation} from '../../ipc/todo-list';
 import {QueryError} from '../common/query-error';
 import {useCreateTodoList} from '../../ws/create-todo-list';
-import {useValidateTodoList} from '../../ws/validate-todo-list';
+import {useSelectTodoList} from '../../ws/select-todo-list';
 
 interface Props {
   onSelected: (l: TodoList) => void;
@@ -16,7 +16,7 @@ export const ListSelection: React.FC<Props> = ({onSelected}) => {
   const [inputError, setInputError] = React.useState(false);
   const [noListError, setNoListError] = React.useState(false);
   const {mutate: createList, error: createListError, isPending: isCreating} = useCreateTodoList();
-  const {mutate: validateList, error: validateListError, isPending: isValidating} = useValidateTodoList();
+  const {mutate: selectList, error: selectListError, isPending: isSelecting} = useSelectTodoList();
   const {mutate: storeList, error: storeListError, isPending: isStoring} = useStoreTodoListMutation();
   const storeListToSettings = (list: TodoList) => {
     storeList({list}, {
@@ -38,22 +38,19 @@ export const ListSelection: React.FC<Props> = ({onSelected}) => {
       return;
     }
     setNoListError(false);
-    validateList({code}, {
-      onSuccess: (data) => {
-        if (data.exists) {
-          storeListToSettings({code});
-        } else {
-          setNoListError(true);
-        }
+    selectList({code}, {
+      onSuccess: () => {
+        // ID 0 is reserved for the local list. Only backend has the real ID.
+        storeListToSettings({id: 0, code});
       }
     });
   };
-  const isLoading = isCreating || isStoring || isValidating;
+  const isLoading = isCreating || isStoring || isSelecting;
   return (
     <CenteredLayout>
       <QueryError title="Failed to create the list" error={createListError}/>
       <QueryError title="Failed to store the list locally" error={storeListError}/>
-      <QueryError title="Failed to validate the list exists" error={validateListError}/>
+      <QueryError title="Failed to select the list" error={selectListError}/>
       {noListError && <QueryError title="List not found" error="The list with the given code does not exist."/>}
       <Typography variant="h6" sx={{mb: 4}}>The TODOs you write are part of a list.</Typography>
       <Grid2 container spacing={1}>

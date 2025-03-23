@@ -7,13 +7,14 @@ import {useResetSettings} from '../../ipc';
 
 interface Props {
   token: string;
+  listCode: string | null;
   onAuthenticated: () => void;
   onReset: () => void;
 }
 
 // This is used to call token-based authentication, and render an error message if the token is invalid.
-export const Auth: React.FC<Props> = ({token, onAuthenticated, onReset}) => {
-  const {data, isPending, error} = useAuthenticateWSQuery(token);
+export const Auth: React.FC<Props> = ({token, listCode, onAuthenticated, onReset}) => {
+  const {data, isPending, error} = useAuthenticateWSQuery(token, listCode);
   const {mutate: resetSettings} = useResetSettings({
     onSuccess: onReset,
   });
