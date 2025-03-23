@@ -14,6 +14,7 @@ import {TodoList} from '../todo-list';
 import {setupWSConnection} from '../../ws';
 import {Auth} from './auth';
 import {useWSDisconnect} from '../../ws/disconnect';
+import {useTodoStore} from './todo-store';
 
 // Instantiate the WS Client early, before React starts rendering.
 setupWSConnection();
@@ -46,10 +47,6 @@ export const App = () => {
     setAuthenticated(false);
     console.log('WebSocket disconnected, auth reset');
   }, []));
-
-  // const {data: todoList, isPending: todosLoading, error: todoError} = useTodoStore({
-  //   ready: authenticated,
-  // });
 
   if (user === undefined) {
     // User not yet loaded from settings. Wait to render the UI.
@@ -88,12 +85,6 @@ export const App = () => {
     content = <ListSelection onSelected={(l) => {
       setList(l);
     }}/>;
-  } else if (!hasData) {
-    content = (
-      <Stack alignItems="center" justifyContent="center" sx={{height: '60%'}}>
-        <Progress title="Loading TODOs..."/>
-      </Stack>
-    );
   } else {
     content = (
       <AppState user={user} list={list}>

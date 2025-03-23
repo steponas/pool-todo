@@ -1,51 +1,36 @@
 import React from 'react';
 import {Stack} from '@mui/material';
-import {Todo, TodoStatus, TodoUpdate} from '../../../../../types';
+import {TodoUpdate} from '../../../../../types';
 import {TodoItem, NewTodoItem} from '../todo-item';
 import {Empty} from './empty';
 import {useAppContext} from '../../context';
 import {TodoEdit} from '../todo-edit';
-
-const mockData: Todo[] = [
-  {
-    id: '1',
-    createdAt: new Date(),
-    createdBy: {
-      id: '1',
-      name: 'John Doe',
-    },
-    title: 'First todo',
-    updatedAt: new Date(),
-    status: TodoStatus.ONGOING,
-  },
-  {
-    id: '2',
-    createdAt: new Date(),
-    createdBy: {
-      id: '1',
-      name: 'John Doe',
-    },
-    title: 'Second todo',
-    updatedAt: new Date(),
-    status: TodoStatus.TODO,
-  },
-  {
-    id: '3',
-    createdAt: new Date(),
-    createdBy: {
-      id: '131',
-      name: 'James Smith',
-    },
-    title: 'Third todo. Nice long list. Some powerful things\n\nWowo.',
-    updatedAt: new Date(),
-    status: TodoStatus.DONE,
-  },
-];
+import {useTodoStore} from '../app/todo-store';
+import {Progress} from '../progress';
+import {QueryError} from '../common/query-error';
 
 export const TodoList = () => {
   const ctx = useAppContext();
+  const {todoList, isPending, error} = useTodoStore({
+    code: ctx.list.code,
+  });
 
-  const items = mockData.map((todo) => {
+  if (isPending) {
+    return (
+      <Stack alignItems="center" justifyContent="center" sx={{height: '60%'}}>
+        <Progress title="Loading TODOs..."/>
+      </Stack>
+    );
+  }
+  if (error) {
+    return (
+      <Stack alignItems="center" justifyContent="center" sx={{height: '60%'}}>
+        <QueryError title="Failed to load TODOs" error={error}/>
+      </Stack>
+    );
+  }
+
+  const items = todoList?.map((todo) => {
     if (todo.id === ctx.editedId) {
       // For edit, show the edit component
       return (
@@ -78,7 +63,7 @@ export const TodoList = () => {
   }
 
   let content;
-  if (items.length === 0) {
+  if (items?.length === 0) {
     content = <Empty/>;
   } else {
     content = <>{items}</>;

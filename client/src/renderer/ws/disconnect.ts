@@ -11,5 +11,9 @@ export const useWSDisconnect = (onDisconnect: () => void) => {
     }
     prev.current = onDisconnect;
     io.on('disconnect', onDisconnect);
+
+    return () => {
+      io.off('disconnect', onDisconnect);
+    }
   }, [onDisconnect]);
 };

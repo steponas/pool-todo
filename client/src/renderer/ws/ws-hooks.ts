@@ -21,10 +21,12 @@ export const useWsMutation = <Request, Response>({event}: MutateArgs) => {
   );
 }
 
+export type UseWsQueryOptions = Pick<UseQueryOptions, 'retry' | 'refetchInterval' | 'retryDelay' | 'enabled'>;
+
 interface QueryArgs<Data> {
   event: WSClientRequestTypes;
   variables?: Data;
-  options?: Pick<UseQueryOptions, 'retry'|'refetchInterval'|'retryDelay'>,
+  options?: UseWsQueryOptions,
 }
 
 export const useWsQuery = <Request, Response>({event, variables, options}: QueryArgs<Request>) => {

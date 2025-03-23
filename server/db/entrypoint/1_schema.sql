@@ -35,6 +35,8 @@ CREATE TABLE todo_items (
     status todo_item_status NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    created_by UUID NOT NULL,
     primary key (id),
-    foreign key (todo_list_id) references todo_lists(id)
+    foreign key (todo_list_id) references todo_lists(id),
+    foreign key (created_by) references users(id)
 );

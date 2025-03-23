@@ -1,6 +1,6 @@
-import {db} from '../../db';
+import {getIdByCode} from './get-id-by-code';
 
 export const validateTodoListExists = async (code: string): Promise<boolean> => {
-  const res = await db().from('todo_lists').first('id').where({code});
+  const res = await getIdByCode(code);
   return !!res;
 };
