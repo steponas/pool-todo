@@ -1,4 +1,3 @@
-import {storeUserWithToken} from './user';
 import {updateSettings} from '../services/settings';
 import {storeList} from './list';
 
@@ -11,7 +10,7 @@ const mockUpdateSettings = updateSettings as jest.MockedFunction<typeof updateSe
 
 describe('storeList', () => {
   it('should store the list dat', async () => {
-    const event: any = {};
+    const event = {};
     const list = {id: '123', name: 'List #1'};
 
     const resultingSettings = {};
@@ -20,6 +19,7 @@ describe('storeList', () => {
       return null;
     });
 
+    // @ts-expect-error - event is not used
     const result = await storeList(event, list);
     expect(result).toEqual({});
     expect(resultingSettings).toEqual({list});

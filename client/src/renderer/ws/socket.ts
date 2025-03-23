@@ -7,8 +7,11 @@ export const setupWSConnection = () => {
   socket = io('http://localhost:10000');
 
   socket.on('connect', () => {
-    Log.info('Connected');
+    Log.info('Connected to WebSocket');
   })
+  socket.on('disconnect', () => {
+    Log.info('Disconnected from WebSocket');
+  });
 };
 
 export const getSocket = () => {

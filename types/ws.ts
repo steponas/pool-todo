@@ -14,8 +14,14 @@ export interface WSErrorResponse {
 export interface WSCreateUserRequest {
   name: string;
 }
-
 export interface WSCreateUserResponse {
   user: User;
   token: string;
+}
+
+export interface WSAuthenticateRequest {
+  token: string;
+}
+export interface WSAuthenticateResponse {
+  user: User;
 }

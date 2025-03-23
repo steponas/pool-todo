@@ -13,6 +13,8 @@ export const createUser = async (io: Server, client: Socket, data: WSCreateUserR
       user = await UserModel.getInTx(tx, id);
       token = await TokenModel.createForUser(tx, id);
     });
+    // Mark the client as authenticated
+    client.data.user = user;
     callback({user, token});
   } catch (err) {
     logger.error('Failed to create user', err);

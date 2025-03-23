@@ -28,11 +28,11 @@ export const startWSServer = (opts: Options) => {
   });
 
   io.on('connection', (client) => {
-    logger.info('a user connected');
+    logger.info('a client connected');
+    client.on('disconnect', () => {
+      logger.info('A client disconnected');
+    });
     setupHandlers(io, client);
-  });
-  io.on('disconnect', () => {
-    logger.info('a user disconnected');
   });
 
   opts.httpServer.listen(opts.port);

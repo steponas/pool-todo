@@ -12,10 +12,16 @@ import {UserCreation} from '../user-creation';
 import {ListSelection} from '../list-selection';
 import {TodoList} from '../todo-list';
 import {setupWSConnection} from '../../ws';
+import {Auth} from './auth';
+import {useWSDisconnect} from '../../ws/disconnect';
+
+// Instantiate the WS Client early, before React starts rendering.
+setupWSConnection();
 
 const queryClient = new QueryClient();
 
 export const App = () => {
+  const [authenticated, setAuthenticated] = React.useState(false);
   const [user, setUser] = React.useState<User | null | undefined>(undefined);
   const [list, setList] = React.useState<TodoListT | null>(null);
   const [token, setToken] = React.useState<string | null>(null);
@@ -33,22 +39,21 @@ export const App = () => {
         Log.error('Failed to get app main settings', err);
         setUser(null);
       });
+  }, []);
 
-    // Connect to WebSocket server
-    setupWSConnection();
-  }, [])
+  useWSDisconnect(React.useCallback(() => {
+    // WebSocket server has disconnected. Reset the authentication state.
+    setAuthenticated(false);
+    console.log('WebSocket disconnected, auth reset');
+  }, []));
 
   if (user === undefined) {
     // User not yet loaded from settings. Wait to render the UI.
     return null;
   }
 
-  // TODO: Establish connection to the server
-  // TODO: Token based authentication
   // TODO: Fetch TODOs from the server
   const hasData = true;
-
-  console.log('User:', user);
 
   let content: React.ReactNode;
   if (user === null) {
@@ -57,7 +62,13 @@ export const App = () => {
       <UserCreation onCreated={(user, token) => {
         setUser(user);
         setToken(token);
+        // Registering the user authenticates him too.
+        setAuthenticated(true);
       }}/>
+    );
+  } else if (!authenticated) {
+    content = (
+      <Auth token={token} onAuthenticated={() => setAuthenticated(true)} />
     );
   } else if (!list) {
     // Room is not selected. Need to select it first.

@@ -12,7 +12,7 @@ describe('storeUserWithToken', () => {
   it('should store the user and token', async () => {
     const user = {id: '123', name: 'test'};
     const token = 'test123';
-    const event: any = {};
+    const event = {};
 
     const resultingSettings = {};
     mockUpdateSettings.mockImplementation(async (path, cb): Promise<Error | null> => {
@@ -20,6 +20,7 @@ describe('storeUserWithToken', () => {
       return null;
     });
 
+    // @ts-expect-error - event is not used
     const result = await storeUserWithToken(event, user, token);
     expect(result).toEqual({});
     expect(resultingSettings).toEqual({user, token});
