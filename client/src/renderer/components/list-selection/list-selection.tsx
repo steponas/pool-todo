@@ -5,6 +5,7 @@ import {CenteredLayout} from '../common';
 import {useStoreTodoListMutation} from '../../ipc/todo-list';
 import {QueryError} from '../common/query-error';
 import {useCreateTodoList} from '../../ws/create-todo-list';
+import {useValidateTodoList} from '../../ws/validate-todo-list';
 
 interface Props {
   onSelected: (l: TodoList) => void;
@@ -13,7 +14,9 @@ interface Props {
 export const ListSelection: React.FC<Props> = ({onSelected}) => {
   const [code, setCode] = React.useState('');
   const [inputError, setInputError] = React.useState(false);
+  const [noListError, setNoListError] = React.useState(false);
   const {mutate: createList, error: createListError, isPending: isCreating} = useCreateTodoList();
+  const {mutate: validateList, error: validateListError, isPending: isValidating} = useValidateTodoList();
   const {mutate: storeList, error: storeListError, isPending: isStoring} = useStoreTodoListMutation();
   const storeListToSettings = (list: TodoList) => {
     storeList({list}, {
@@ -34,13 +37,24 @@ export const ListSelection: React.FC<Props> = ({onSelected}) => {
       setInputError(true);
       return;
     }
-    storeListToSettings({id: code, name: 'test?'});
+    setNoListError(false);
+    validateList({code}, {
+      onSuccess: (data) => {
+        if (data.exists) {
+          storeListToSettings({code});
+        } else {
+          setNoListError(true);
+        }
+      }
+    });
   };
-  const isLoading = isCreating || isStoring;
+  const isLoading = isCreating || isStoring || isValidating;
   return (
     <CenteredLayout>
       <QueryError title="Failed to create the list" error={createListError}/>
       <QueryError title="Failed to store the list locally" error={storeListError}/>
+      <QueryError title="Failed to validate the list exists" error={validateListError}/>
+      {noListError && <QueryError title="List not found" error="The list with the given code does not exist."/>}
       <Typography variant="h6" sx={{mb: 4}}>The TODOs you write are part of a list.</Typography>
       <Grid2 container spacing={1}>
         <Grid2 size={5} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

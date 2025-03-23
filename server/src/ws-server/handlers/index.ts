@@ -3,6 +3,7 @@ import {WSClientRequestTypes} from '../../../../types';
 import {createUser} from './create-user';
 import {tokenAuth} from './token-auth';
 import {createList} from './create-list';
+import {validateListExists} from './validate-list-exists';
 
 const nonAuthHandlers = [
   {type: WSClientRequestTypes.CREATE_USER, handler: createUser},
@@ -10,8 +11,8 @@ const nonAuthHandlers = [
 ];
 
 const authenticatedHandlers = [
-  // {type: WSClientRequestTypes.SELECT_LIST, handler: selectList},
   {type: WSClientRequestTypes.CREATE_LIST, handler: createList},
+  {type: WSClientRequestTypes.VALIDATE_LIST_EXISTS, handler: validateListExists},
 ];
 
 export const setupHandlers = (io: Server, client: Socket) => {

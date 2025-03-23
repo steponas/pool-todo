@@ -6,6 +6,7 @@ export enum WSClientRequestTypes {
   TOKEN_AUTH = 'TOKEN_AUTH',
   SELECT_LIST = 'SELECT_LIST',
   CREATE_LIST = 'CREATE_LIST',
+  VALIDATE_LIST_EXISTS = 'VALIDATE_LIST_EXISTS',
 }
 
 export interface WSErrorResponse {
@@ -29,4 +30,11 @@ export interface WSAuthenticateResponse {
 
 export interface WSListCreatedResponse {
   list: TodoList;
+}
+
+export interface WSTodoListExistsRequest {
+  code: string;
+}
+export interface WSTodoListExistsResponse {
+  exists: boolean;
 }
