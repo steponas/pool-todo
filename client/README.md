@@ -28,3 +28,10 @@ npm run start
 ```
 npm run test
 ```
+
+## Building the app
+
+I've created convenience scripts to build the app for MacOS (both CPUs) and Windows.
+```
+
+```
