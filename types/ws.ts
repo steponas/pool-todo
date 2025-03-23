@@ -1,4 +1,5 @@
 import {User} from './user';
+import {TodoList} from './todo-list';
 
 export enum WSClientRequestTypes {
   CREATE_USER = 'CREATE_USER',
@@ -24,4 +25,8 @@ export interface WSAuthenticateRequest {
 }
 export interface WSAuthenticateResponse {
   user: User;
+}
+
+export interface WSListCreatedResponse {
+  list: TodoList;
 }

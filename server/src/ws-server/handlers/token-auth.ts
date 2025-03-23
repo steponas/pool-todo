@@ -18,6 +18,7 @@ export const tokenAuth = async (io: Server, client: Socket, data: WSAuthenticate
       throw new Error(`failed to find user for token "${data.token}"`);
     }
     logger.info(`User ${user.name} authenticated`);
+    client.data.user = user;
     callback({user});
   } catch (err) {
     logger.error('User by token not found', err);

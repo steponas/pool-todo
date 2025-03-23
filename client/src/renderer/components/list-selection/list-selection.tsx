@@ -4,6 +4,7 @@ import {TodoList} from '../../../../../types';
 import {CenteredLayout} from '../common';
 import {useStoreTodoListMutation} from '../../ipc/todo-list';
 import {QueryError} from '../common/query-error';
+import {useCreateTodoList} from '../../ws/create-todo-list';
 
 interface Props {
   onSelected: (l: TodoList) => void;
@@ -12,7 +13,8 @@ interface Props {
 export const ListSelection: React.FC<Props> = ({onSelected}) => {
   const [code, setCode] = React.useState('');
   const [inputError, setInputError] = React.useState(false);
-  const {mutate: storeList, error: storeListError, isPending} = useStoreTodoListMutation();
+  const {mutate: createList, error: createListError, isPending: isCreating} = useCreateTodoList();
+  const {mutate: storeList, error: storeListError, isPending: isStoring} = useStoreTodoListMutation();
   const storeListToSettings = (list: TodoList) => {
     storeList({list}, {
       onSuccess: () => {
@@ -21,7 +23,11 @@ export const ListSelection: React.FC<Props> = ({onSelected}) => {
     });
   }
   const createNewList = () => {
-    storeListToSettings({id: 'new-123123', name: 'test?'});
+    createList(null, {
+      onSuccess: (data) => {
+        storeListToSettings(data.list);
+      }
+    });
   };
   const selectExistingList = () => {
     if (code?.length < 3) {
@@ -30,13 +36,15 @@ export const ListSelection: React.FC<Props> = ({onSelected}) => {
     }
     storeListToSettings({id: code, name: 'test?'});
   };
+  const isLoading = isCreating || isStoring;
   return (
     <CenteredLayout>
+      <QueryError title="Failed to create the list" error={createListError}/>
       <QueryError title="Failed to store the list locally" error={storeListError}/>
       <Typography variant="h6" sx={{mb: 4}}>The TODOs you write are part of a list.</Typography>
       <Grid2 container spacing={1}>
         <Grid2 size={5} sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <Button variant="contained" color="primary" onClick={createNewList} disabled={isPending}>
+          <Button variant="contained" color="primary" onClick={createNewList} disabled={isLoading}>
             Create a list &rarr;
           </Button>
         </Grid2>
@@ -61,9 +69,9 @@ export const ListSelection: React.FC<Props> = ({onSelected}) => {
             }}
             helperText={inputError ? 'Please enter the code' : undefined}
             size="small"
-            disabled={isPending}
+            disabled={isLoading}
           />
-          <Button variant="contained" color="secondary" onClick={selectExistingList} disabled={isPending}>
+          <Button variant="contained" color="secondary" onClick={selectExistingList} disabled={isLoading}>
             Continue &rarr;
           </Button>
         </Grid2>

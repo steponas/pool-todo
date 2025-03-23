@@ -6,6 +6,7 @@ export enum IPCRendererMessageType {
   GET_SETTINGS = 'GET_SETTINGS',
   STORE_USER = 'STORE_USER',
   STORE_LIST = 'STORE_LIST',
+  RESET_SETTINGS = 'RESET_SETTINGS',
 }
 
 export interface IPCGetSettingsResponse {

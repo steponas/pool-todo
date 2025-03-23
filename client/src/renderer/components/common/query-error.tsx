@@ -4,6 +4,7 @@ import {Alert, AlertTitle} from '@mui/material';
 interface Props {
   error: Error | string;
   title?: React.ReactNode;
+  extra?: React.ReactNode;
 }
 
 export const getErrorText = (error: Error | string): string => {
@@ -13,7 +14,7 @@ export const getErrorText = (error: Error | string): string => {
   return error.message;
 }
 
-export const QueryError: React.FC<Props> = ({error, title}) => {
+export const QueryError: React.FC<Props> = ({error, title, extra}) => {
   if (!error) {
     return null;
   }
@@ -22,7 +23,7 @@ export const QueryError: React.FC<Props> = ({error, title}) => {
       {title && (
         <AlertTitle>{title}</AlertTitle>
       )}
-      {getErrorText(error)}
+      {getErrorText(error)}{extra}
     </Alert>
   );
 }

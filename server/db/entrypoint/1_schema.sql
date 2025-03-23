@@ -17,19 +17,20 @@ CREATE TABLE "user_tokens" (
 );
 
 CREATE TABLE "todo_lists" (
-    id UUID NOT NULL DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL,
-    name TEXT NOT NULL,
+    id SERIAL NOT NULL,
+    code TEXT NOT NULL,
+    created_by UUID NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     primary key (id),
-    foreign key (user_id) references users(id)
+    unique (code),
+    foreign key (created_by) references users(id)
 );
 
 CREATE TYPE "todo_item_status" AS ENUM ('todo', 'ongoing', 'done');
 
 CREATE TABLE todo_items (
     id UUID NOT NULL DEFAULT gen_random_uuid(),
-    todo_list_id UUID NOT NULL,
+    todo_list_id INT NOT NULL,
     name TEXT NOT NULL,
     status todo_item_status NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),

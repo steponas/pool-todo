@@ -14,6 +14,7 @@ const todoApi = {
     ipcRenderer.invoke(IPCRendererMessageType.STORE_USER, u, token),
   storeTodoList: (list: TodoList): Promise<IPCStoreTodoListResponse> =>
     ipcRenderer.invoke(IPCRendererMessageType.STORE_LIST, list),
+  resetSettings: (): Promise<void> => ipcRenderer.invoke(IPCRendererMessageType.RESET_SETTINGS),
 };
 
 declare global {

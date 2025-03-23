@@ -47,6 +47,10 @@ export const App = () => {
     console.log('WebSocket disconnected, auth reset');
   }, []));
 
+  // const {data: todoList, isPending: todosLoading, error: todoError} = useTodoStore({
+  //   ready: authenticated,
+  // });
+
   if (user === undefined) {
     // User not yet loaded from settings. Wait to render the UI.
     return null;
@@ -68,7 +72,16 @@ export const App = () => {
     );
   } else if (!authenticated) {
     content = (
-      <Auth token={token} onAuthenticated={() => setAuthenticated(true)} />
+      <Auth
+        token={token}
+        onAuthenticated={() => setAuthenticated(true)}
+        onReset={() => {
+          setUser(null);
+          setToken(null);
+          setList(null);
+          setAuthenticated(false);
+        }}
+      />
     );
   } else if (!list) {
     // Room is not selected. Need to select it first.

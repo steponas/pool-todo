@@ -78,7 +78,7 @@ describe('Settings Service', () => {
   it('should write settings to file', async () => {
     const settings = {
       user: {id: '321', name: 'test'},
-      list: {id: '123', name: 'List #1'},
+      list: {code: 'List #1'},
       token: 'test123',
     };
     const res = await writeSettings('/test/path', settings);
@@ -93,7 +93,7 @@ describe('Settings Service', () => {
     mockFs.writeFile.mockRejectedValue(new Error('Failed to write file'));
     const settings = {
       user: {id: '321', name: 'test'},
-      list: {id: '123', name: 'List #1'},
+      list: {code: 'List #1'},
       token: 'token321',
     };
 
@@ -113,7 +113,7 @@ describe('Settings Service', () => {
 
     const settings = {
       user: {id: '321', name: 'test'},
-      list: {id: '123', name: 'List #1'},
+      list: {code: 'List #1'},
       token: 'test123',
     };
     await writeSettings('/test/path', settings);
@@ -127,13 +127,13 @@ describe('Settings Service', () => {
 
     const result = await updateSettings('/test/path', (settings) => {
       settings.user.name = 'updated';
-      settings.list.name = 'Updated List';
+      settings.list.code = 'Updated code';
     });
     expect(result).toBe(null);
 
     // Update values should be returned
     const updated = await loadSettings('/test/path');
     expect(updated.settings.user.name).toBe('updated');
-    expect(updated.settings.list.name).toBe('Updated List');
+    expect(updated.settings.list.code).toBe('Updated code');
   });
 });
