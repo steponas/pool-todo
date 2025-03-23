@@ -6,6 +6,7 @@ import {
 } from '../../../../types';
 import {logger} from '../../log';
 import {TodoItemModel} from '../../model';
+import {notifyListUpdate} from '../helpers';
 
 export const createTodo = async (io: Server, client: Socket, data: WSCreateTodoItemRequest, callback: (r: WSCreateTodoItemResponse | WSErrorResponse) => unknown) => {
   try {
@@ -14,6 +15,7 @@ export const createTodo = async (io: Server, client: Socket, data: WSCreateTodoI
       listId: client.data.todoList.id,
     });
     callback({todo: item});
+    notifyListUpdate(io, client);
     logger.info(`TODO created by ${client.data.user.name}`);
   } catch (err) {
     logger.error('Failed to create a todo item', err);

@@ -12,6 +12,10 @@ export enum WSClientRequestTypes {
   UPDATE_TODO = 'UPDATE_TODO',
 }
 
+export enum WSServerPushTypes {
+  LIST_UPDATED = 'LIST_UPDATED',
+}
+
 export interface WSErrorResponse {
   error: string;
 }

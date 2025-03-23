@@ -6,6 +6,7 @@ import {
 } from '../../../../types';
 import {logger} from '../../log';
 import {TodoListModel} from '../../model';
+import {updateSocketTodoList} from '../helpers';
 
 export const createList = async (io: Server, client: Socket, data: void, callback: (r: WSListCreatedResponse | WSErrorResponse) => unknown) => {
   const user: User = client.data.user;
@@ -13,10 +14,7 @@ export const createList = async (io: Server, client: Socket, data: void, callbac
     const list = await TodoListModel.create({
       createdBy: user.id,
     });
-    client.data.todoList = {
-      id: list.id,
-      code: list.code,
-    }
+    updateSocketTodoList(client, list);
     callback({list});
     logger.info(`List "${list.code}" created by ${user.name}`);
   } catch (err) {

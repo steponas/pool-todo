@@ -7,6 +7,7 @@ import {
 } from '../../../../types';
 import {TodoListModel, UserModel} from '../../model';
 import {logger} from '../../log';
+import {updateSocketTodoList} from '../helpers';
 
 const reqSchema = z.object({
   token: z.string().min(1),
@@ -29,10 +30,7 @@ const setListOnClient = async (client: Socket, listCode: string) => {
     logger.warn(`Failed to set list on client "${listCode}"`);
     return;
   }
-  client.data.todoList = {
-    id,
-    code: listCode,
-  };
+  updateSocketTodoList(client, {id, code: listCode});
   logger.info(`List "${listCode}" assigned to user ${client.data.user.name}`);
 }
 

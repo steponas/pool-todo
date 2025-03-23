@@ -5,7 +5,7 @@ import {TodoItem, NewTodoItem} from '../todo-item';
 import {Empty} from './empty';
 import {useAppContext} from '../../context';
 import {TodoEdit} from '../todo-edit';
-import {useTodoStore} from '../app/todo-store';
+import {useTodoStore} from './todo-store';
 import {Progress} from '../progress';
 import {QueryError} from '../common/query-error';
 import {useUpdateTodoMutation} from '../../ws/update-todo-item';
