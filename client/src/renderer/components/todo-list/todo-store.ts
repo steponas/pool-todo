@@ -31,7 +31,7 @@ export const useTodoStore = (): Result => {
   // Bind to list update events
   React.useEffect(() => {
     const updater = () => {
-      refetch().catch(err => {
+      refetch().catch(() => {
         // Ignore, but don't error.
       });
     };

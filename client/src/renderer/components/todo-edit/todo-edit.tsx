@@ -4,8 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {TodoStatus, TodoUpdate} from '../../../../../types';
 import {TodoWrapper} from '../todo-common';
 import {TodoStatusEdit} from './todo-status-edit';
-import { QueryError } from '../common/query-error';
-import {useUpdateTodoMutation} from '../../ws/update-todo-item';
+import {QueryError} from '../common/query-error';
 
 interface Props {
   initialTitle: string;

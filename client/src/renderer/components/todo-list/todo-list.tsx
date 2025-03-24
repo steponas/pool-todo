@@ -10,13 +10,14 @@ import {Progress} from '../progress';
 import {QueryError} from '../common/query-error';
 import {useUpdateTodoMutation} from '../../ws/update-todo-item';
 import {TodoConflict} from './conflict';
+import {useDeleteTodoMutation} from '../../ws/delete-todo-item';
 
 export const TodoList = () => {
   const ctx = useAppContext();
   const {todoList, isPending, error} = useTodoStore();
-  const {mutate: update, isPending: isUpdating, error: updateError} = useUpdateTodoMutation();
+  const {mutate: update, isPending: isUpdating, error: updateError, reset: resetUpdate} = useUpdateTodoMutation();
   const [conflictData, setConflictData] = React.useState<TodoUpdate | null>(null);
-  // TODO deletion
+  const {mutate: deleteTodo, isPending: isDeleting, error: deletionError, reset: resetDelete} = useDeleteTodoMutation();
 
   const saveTodo = (id: string, lastUpdateTime: string, u: TodoUpdate) => {
     update({
@@ -46,6 +47,9 @@ export const TodoList = () => {
   const closeEditing = () => {
     ctx.onCancelEdit();
     setConflictData(null);
+    // Reset query states
+    resetUpdate();
+    resetDelete();
   }
 
   if (isPending) {
@@ -73,12 +77,13 @@ export const TodoList = () => {
           initialStatus={todo.status}
           onSave={(todoUpdate: TodoUpdate) => saveTodo(todo.id, todo.updatedAt, todoUpdate)}
           onDelete={() => {
-            console.log('Deleting todo:', todo.id);
-            closeEditing();
+            deleteTodo({id: todo.id}, {
+              onSuccess: closeEditing,
+            });
           }}
           onCancel={closeEditing}
-          error={updateError}
-          isLoading={isUpdating}
+          error={updateError || deletionError}
+          isLoading={isUpdating || isDeleting}
         />
       )
     }

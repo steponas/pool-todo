@@ -10,6 +10,7 @@ export enum WSClientRequestTypes {
   GET_LIST_TODOS = 'GET_LIST_TODOS',
   CREATE_TODO = 'CREATE_TODO',
   UPDATE_TODO = 'UPDATE_TODO',
+  DELETE_TODO = 'DELETE_TODO',
 }
 
 export enum WSServerPushTypes {
@@ -72,3 +73,7 @@ export enum TodoUpdateStatus {
 export interface WSUpdateTodoItemResponse {
   status: TodoUpdateStatus;
 }
+export interface WSDeleteTodoItemRequest {
+  id: string;
+}
+export interface WSDeleteTodoItemResponse {}
