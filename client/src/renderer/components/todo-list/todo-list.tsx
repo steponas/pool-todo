@@ -1,6 +1,6 @@
 import React from 'react';
 import {Stack} from '@mui/material';
-import {TodoUpdate} from '../../../../../types';
+import {TodoUpdate, TodoUpdateStatus} from '../../../../../types';
 import {TodoItem, NewTodoItem} from '../todo-item';
 import {Empty} from './empty';
 import {useAppContext} from '../../context';
@@ -9,11 +9,44 @@ import {useTodoStore} from './todo-store';
 import {Progress} from '../progress';
 import {QueryError} from '../common/query-error';
 import {useUpdateTodoMutation} from '../../ws/update-todo-item';
+import {TodoConflict} from './conflict';
 
 export const TodoList = () => {
   const ctx = useAppContext();
   const {todoList, isPending, error} = useTodoStore();
   const {mutate: update, isPending: isUpdating, error: updateError} = useUpdateTodoMutation();
+  const [conflictData, setConflictData] = React.useState<TodoUpdate | null>(null);
+  // TODO deletion
+
+  const saveTodo = (id: string, lastUpdateTime: string, u: TodoUpdate) => {
+    update({
+      id,
+      lastUpdateTime,
+      status: u.status,
+      title: u.title,
+    }, {
+      onSuccess: (res) => {
+        switch (res.status) {
+          case TodoUpdateStatus.OK:
+            // Update done. Close the edit mode.
+            closeEditing();
+            break;
+          case TodoUpdateStatus.CONFLICT:
+            // Conflict. Show the error.
+            setConflictData(u);
+            break;
+          case TodoUpdateStatus.INCORRECT_STATUS:
+            // Incorrect status. Show the error.
+            break;
+        }
+      },
+    })
+  }
+
+  const closeEditing = () => {
+    ctx.onCancelEdit();
+    setConflictData(null);
+  }
 
   if (isPending) {
     return (
@@ -38,23 +71,12 @@ export const TodoList = () => {
           key={todo.id}
           initialTitle={todo.title}
           initialStatus={todo.status}
-          onSave={(todoUpdate: TodoUpdate) => {
-            update({
-              id: todo.id,
-              status: todoUpdate.status,
-              title: todoUpdate.title,
-              lastUpdateTime: todo.updatedAt,
-            }, {
-              onSuccess: () => {
-                ctx.onCancelEdit();
-              },
-            })
-          }}
+          onSave={(todoUpdate: TodoUpdate) => saveTodo(todo.id, todo.updatedAt, todoUpdate)}
           onDelete={() => {
             console.log('Deleting todo:', todo.id);
-            ctx.onCancelEdit();
+            closeEditing();
           }}
-          onCancel={ctx.onCancelEdit}
+          onCancel={closeEditing}
           error={updateError}
           isLoading={isUpdating}
         />
@@ -82,6 +104,15 @@ export const TodoList = () => {
   return (
     <Stack spacing={2} sx={{p: 3}}>
       {content}
+      {conflictData && ctx.editedId && (
+        <TodoConflict
+          onCancel={closeEditing}
+          onOverride={() => {
+            // User has confirmed the override, save the TODO with current time
+            saveTodo(ctx.editedId, new Date().toISOString(), conflictData)
+          }}
+        />
+      )}
     </Stack>
   );
 };
